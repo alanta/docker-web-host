@@ -1,0 +1,17 @@
+[Unit]
+Description=MySQL Server
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill database
+ExecStartPre=-/usr/bin/docker rm database
+ExecStartPre=/usr/bin/docker pull mysql
+ExecStart=/usr/bin/docker run --name database -e MYSQL_ROOT_PASSWORD=whatever -v /home/core/mysql:/var/lib/mysql -d mysql
+
+[Install]
+WantedBy=multi-user.target
+
+[X-Fleet]
+MachineOf=web-proxy.service

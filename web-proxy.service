@@ -1,0 +1,14 @@
+[Unit]
+Description=Web Proxy
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill web-proxy
+ExecStartPre=-/usr/bin/docker rm web-proxy
+ExecStartPre=/usr/bin/docker pull jwilder/nginx-proxy
+ExecStart=/usr/bin/docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock -t --name web-proxy jwilder/nginx-proxy
+
+[Install]
+WantedBy=multi-user.target
